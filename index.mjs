@@ -1,11 +1,22 @@
 import express from 'express';
 import joi from 'joi';
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 import Jimp from 'jimp';
 import levelup from 'levelup';
 import memdown from 'memdown';
 import * as uuid from 'uuid';
-import bodyParser from "body-parser";
+import bodyParser from 'body-parser';
+import rateLimit from 'express-rate-limit';
+
+const postLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 5,
+});
+
+const getLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 60,
+});
 
 const db = levelup(memdown());
 const app = express();
@@ -30,7 +41,7 @@ const getValue = async (name) => {
 
 const setValue = async (name, value) => {
     try {
-        return await db.put(name, value);
+        return await db.put(name, value, {});
     } catch (e) {
         return null;
     }
@@ -97,7 +108,7 @@ const getOffsetFromIndex = (index) => {
     }
 };
 
-app.post('/', jsonParser, async (req, res) => {
+app.post('/', postLimiter, jsonParser, async (req, res) => {
     const body = req.body;
     const items = body?.items ?? [];
 
@@ -154,7 +165,7 @@ app.post('/', jsonParser, async (req, res) => {
     });
 });
 
-app.get('/inventory.png', async (req,res) => {
+app.get('/inventory.png', getLimiter, async (req,res) => {
    const buffer = await getValue(`inventory-${req.query?.id}`);
    if(buffer === null || !buffer.length) {
        return res.status(404).send({message: 'not found'});
