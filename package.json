@@ -1,0 +1,18 @@
+{
+  "name": "mc-inventory-generator",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "author": "Orkun ÇAKILKAYA <orkuncakilkaya@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node --experimental-modules --experimental-specifier-resolution=node index.mjs"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jimp": "^0.16.1",
+    "joi": "^17.4.2",
+    "node-fetch": "^3.1.0",
+    "sharp": "^0.29.3",
+    "vectorize-text": "^3.2.2"
+  }
+}
