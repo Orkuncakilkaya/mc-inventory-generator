@@ -1,0 +1,71 @@
+{
+  "info" : {
+    "title" : "MC Inventory Generator",
+    "description" : "Generate Minecraft Inventory UI image with items",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/" : {
+      "post" : {
+        "summary" : "Generates and image ID by items in body",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "properties": {
+                "items": {
+                  "items": {
+                    "$ref": "#/definitions/Item"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses" : {
+          "200" : {
+            "description" : "Inventory image created, now you can get ID of image and use with `inventory.png` route"
+          }
+        }
+      }
+    },
+    "/inventory.png" : {
+      "get" : {
+        "summary" : "Get the image you created",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Item": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "default": "cobblestone",
+          "description": "Minecraft Item id. Example: `potion` or numeric id `373-8266`"
+        },
+        "stack": {
+          "type": "integer",
+          "default": 20,
+          "description": "Count of item in stack, minimum 0",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "swagger": "2.0"
+}
