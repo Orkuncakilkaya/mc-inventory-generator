@@ -61,8 +61,7 @@
         "stack": {
           "type": "integer",
           "default": 20,
-          "description": "Count of item in stack, minimum 0",
-          "minimum": 0
+          "description": "Count of item in stack"
         }
       }
     }
