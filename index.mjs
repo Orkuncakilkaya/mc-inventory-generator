@@ -8,12 +8,7 @@ import * as uuid from 'uuid';
 import bodyParser from 'body-parser';
 import rateLimit from 'express-rate-limit';
 
-const postLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 5,
-});
-
-const getLimiter = rateLimit({
+const limiter = rateLimit({
     windowMs: 60 * 1000,
     max: 60,
 });
@@ -108,7 +103,7 @@ const getOffsetFromIndex = (index) => {
     }
 };
 
-app.post('/', postLimiter, jsonParser, async (req, res) => {
+app.post('/', limiter, jsonParser, async (req, res) => {
     const body = req.body;
     const items = body?.items ?? [];
 
@@ -165,7 +160,7 @@ app.post('/', postLimiter, jsonParser, async (req, res) => {
     });
 });
 
-app.get('/inventory.png', getLimiter, async (req,res) => {
+app.get('/inventory.png', limiter, async (req,res) => {
    const buffer = await getValue(`inventory-${req.query?.id}`);
    if(buffer === null || !buffer.length) {
        return res.status(404).send({message: 'not found'});
