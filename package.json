@@ -6,7 +6,9 @@
   "author": "Orkun ÇAKILKAYA <orkuncakilkaya@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node --experimental-modules --experimental-specifier-resolution=node src/index.js"
+    "start": "node --experimental-modules --experimental-specifier-resolution=node src/index.js",
+    "lint-and-fix": "yarn run lint --fix",
+    "lint": "eslint src/**.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

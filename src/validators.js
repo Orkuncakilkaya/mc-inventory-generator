@@ -1,5 +1,4 @@
 import joi from 'joi';
-import downloadImages from './download';
 
 const itemSchema = joi.object().keys({
   id: joi.string().required(),
@@ -24,24 +23,6 @@ const validateRequest = async (req, res, next) => {
 
   if (error) {
     return res.status(422).json({ message: 'Format is invalid', code: 3, detail: error });
-  }
-
-  const { items } = req.body;
-
-  const itemIdList = items.reduce(
-    (acc, item) => (
-      acc.includes(item.id) ? acc : [...acc, item.id]
-    ),
-    [],
-  );
-
-  const incorrectItemIdList = await downloadImages(itemIdList);
-  if (incorrectItemIdList.length > 0) {
-    return res.status(400).json({
-      message: 'Incorrect item id',
-      code: 4,
-      detail: incorrectItemIdList,
-    });
   }
 
   return next();
