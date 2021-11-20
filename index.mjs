@@ -32,14 +32,17 @@ const download = async (itemName) => {
     }
 
     try {
-        const response = await fetch(itemBasePath.replace('item-name', itemName));
+        const response = await fetch(itemBasePath.replace('item-name', itemName), {
+            Host: 'https://mc-inventory-generator.herokuapp.com',
+        });
         if(response.status !== 200) {
            return false;
         }
         const buffer = await response.buffer();
         fs.writeFileSync(`./assets/items/${itemName}.png`, buffer);
         return true;
-    } catch (_) {
+    } catch (e) {
+        console.error(e);
         return false;
     }
 };
@@ -135,4 +138,4 @@ app.get('/inventory.png', async (req, res) => {
     });
 })
 
-app.listen(process.env.PORT);
+app.listen(+process.env.PORT || 3000);
