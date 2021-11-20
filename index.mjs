@@ -99,10 +99,7 @@ const getOffsetFromIndex = (index) => {
 
 app.post('/', jsonParser, async (req, res) => {
     const body = req.body;
-    console.log({body});
     const items = body?.items ?? [];
-
-    console.log({items});
 
     if(!items) {
         return res.status(422).json({message: 'You must send a valid array to items query parameter', code: 1});
