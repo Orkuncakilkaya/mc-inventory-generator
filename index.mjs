@@ -26,15 +26,22 @@ const itemValidator = joi.object().keys({
 
 const inventoryValidator = joi.array().items(itemValidator);
 
+const getBufferFromUrl = async (itemName) => {
+    const response = await fetch(itemBasePath.replace('item-name', itemName));
+    if(response.status !== 200) {
+        throw new Error('File couldn\'t loaded');
+    }
+
+    return await response.buffer();
+}
+
 const download = async (itemName) => {
     if(fs.existsSync(`./assets/items/${itemName}.png`)) {
         return true;
     }
 
     try {
-        const response = await fetch(itemBasePath.replace('item-name', itemName), {
-            Host: 'https://mc-inventory-generator.herokuapp.com',
-        });
+        const response = await fetch(itemBasePath.replace('item-name', itemName));
         if(response.status !== 200) {
            return false;
         }
@@ -102,9 +109,11 @@ app.get('/inventory.png', async (req, res) => {
         return res.status(422).json({message: 'Format is invalid', code: 3, detail: validate.error});
     }
 
+    /*
     const itemIdList = items.reduce((acc, item) => {
         return acc.includes(item.id) ? acc : [...acc, item.id];
     }, []);
+
 
     const incorrectItemIdList = await downloadImages(itemIdList);
     if(incorrectItemIdList.length > 0) {
@@ -114,12 +123,14 @@ app.get('/inventory.png', async (req, res) => {
             detail: incorrectItemIdList
         });
     }
+    */
 
     const image = await Jimp.read('./assets/chest.png');
     for(const index in items) {
         const item = items[index];
         const {top, left} = getOffsetFromIndex(index);
-        const tile = await Jimp.read(`./assets/items/${item.id}.png`);
+        // const tile = await Jimp.read(`./assets/items/${item.id}.png`);
+        const tile = await Jimp.read(await getBufferFromUrl(item.id));
         await image.composite(tile, left, top);
         await image.composite(tileBg, left, top);
         await image.print(item.stack >= 0 ? positiveFont : negativeFont, left, top+40, Math.abs(item.stack));
