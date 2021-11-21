@@ -17,7 +17,7 @@ async function composite(items) {
     await image.print(
       item.stack >= 0 ? positiveFont : negativeFont,
       left,
-      top + 40,
+      top + 46,
       Math.abs(item.stack),
     );
   }
