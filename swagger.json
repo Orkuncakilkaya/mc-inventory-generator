@@ -7,7 +7,7 @@
   "paths" : {
     "/" : {
       "post" : {
-        "summary" : "Generates and image ID by items in body",
+        "summary" : "Generates an image ID by items in body",
         "parameters": [
           {
             "in": "body",
@@ -61,8 +61,7 @@
         "stack": {
           "type": "integer",
           "default": 20,
-          "description": "Count of item in stack, minimum 0",
-          "minimum": 0
+          "description": "Count of item in stack"
         }
       }
     }
